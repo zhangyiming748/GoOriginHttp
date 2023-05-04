@@ -5,9 +5,10 @@ import (
 	"github.com/rs/cors"
 	"github.com/unrolled/render"
 	"github.com/urfave/negroni"
+	"github.com/zhangyiming748/goini"
 	"golang.org/x/exp/slog"
 	"io"
-	"log"
+	l "log"
 	"net/http"
 	"os"
 	"recommend/api"
@@ -21,24 +22,36 @@ var (
 	//url_prefix = "/api/recommend"
 	url_prefix = "/api"
 )
+var logLevel = map[string]slog.Level{
+	"Debug": slog.LevelDebug,
+	"Info":  slog.LevelInfo,
+	"Warn":  slog.LevelWarn,
+	"Error": slog.LevelError,
+}
+
+type Level int
 
 func SetLog(level string) {
 	var opt = slog.HandlerOptions{ // 自定义option
 		AddSource: true,
-		Level:     slog.LevelDebug, // slog 默认日志级别是 info
+		Level:     logLevel[level], // slog 默认日志级别是 info
 	}
 	file := "normal.log"
 	logf, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 	if err != nil {
 		panic(err)
 	}
-	//defer logf.Close() //如果不关闭可能造成内存泄露
 	mylog := slog.New(opt.NewJSONHandler(io.MultiWriter(logf, os.Stdout)))
 	slog.SetDefault(mylog)
 }
 
 func main() {
-	SetLog("Debug")
+	conf := goini.SetConfig("./conf.ini")
+	if level, err := conf.GetValue("log", "level"); err != nil {
+		SetLog("Debug")
+	} else {
+		SetLog(level)
+	}
 	router := makeRouters()
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
@@ -54,8 +67,9 @@ func main() {
 		WriteTimeout:   5 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	slog.Info("服务启动成功")
-	log.Fatal(s.ListenAndServe())
+	slog.Info("服务启动成功", slog.String("端口号", s.Addr))
+	l.Fatal(s.ListenAndServe())
+
 }
 
 func makeRouters() *mux.Router {
@@ -82,5 +96,6 @@ func makeRouters() *mux.Router {
 	router := mux.NewRouter()
 	// http://127.0.0.1:9090/api/v1/getPersion?name=zen
 	router.HandleFunc(url_prefix+"/v1/getPersion", wrapper(controller.GetPersionInfo))
+	router.HandleFunc(url_prefix+"/v1/getWeather", wrapper(controller.GetWeather))
 	return router
 }
