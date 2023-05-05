@@ -14,6 +14,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"strings"
 	"time"
@@ -46,6 +48,24 @@ func SetLog(level string) {
 
 func main() {
 	conf := goini.SetConfig("./conf.ini")
+	ch := make(chan os.Signal)
+	// 监听信号
+	signal.Notify(ch, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
+	go func() {
+		for s := range ch {
+			switch s { // 终端控制进程结束(终端连接断开)|用户发送INTR字符(Ctrl+C)触发|结束程序
+			case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM:
+				slog.Debug("退出:", slog.Any("信号量", s))
+				os.Exit(0)
+			case syscall.SIGUSR1:
+				slog.Debug("usr1", slog.Any("信号量", s))
+			case syscall.SIGUSR2:
+				slog.Debug("usr2", slog.Any("信号量", s))
+			default:
+				slog.Debug("其他信号:", slog.Any("信号量", s))
+			}
+		}
+	}()
 	if level, err := conf.GetValue("log", "level"); err != nil {
 		SetLog("Debug")
 	} else {
