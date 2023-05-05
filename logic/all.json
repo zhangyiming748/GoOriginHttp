@@ -1,0 +1,72 @@
+{
+  "status": "1",
+  "count": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "forecasts": [
+    {
+      "city": "石景山区",
+      "adcode": "110107",
+      "province": "北京",
+      "reporttime": "2023-05-05 10:39:20",
+      "casts": [
+        {
+          "date": "2023-05-05",
+          "week": "5",
+          "dayweather": "小雨",
+          "nightweather": "多云",
+          "daytemp": "18",
+          "nighttemp": "14",
+          "daywind": "北",
+          "nightwind": "北",
+          "daypower": "≤3",
+          "nightpower": "≤3",
+          "daytemp_float": "18.0",
+          "nighttemp_float": "14.0"
+        },
+        {
+          "date": "2023-05-06",
+          "week": "6",
+          "dayweather": "多云",
+          "nightweather": "晴",
+          "daytemp": "23",
+          "nighttemp": "11",
+          "daywind": "北",
+          "nightwind": "北",
+          "daypower": "≤3",
+          "nightpower": "≤3",
+          "daytemp_float": "23.0",
+          "nighttemp_float": "11.0"
+        },
+        {
+          "date": "2023-05-07",
+          "week": "7",
+          "dayweather": "晴",
+          "nightweather": "晴",
+          "daytemp": "27",
+          "nighttemp": "10",
+          "daywind": "东北",
+          "nightwind": "东北",
+          "daypower": "≤3",
+          "nightpower": "≤3",
+          "daytemp_float": "27.0",
+          "nighttemp_float": "10.0"
+        },
+        {
+          "date": "2023-05-08",
+          "week": "1",
+          "dayweather": "晴",
+          "nightweather": "多云",
+          "daytemp": "26",
+          "nighttemp": "14",
+          "daywind": "南",
+          "nightwind": "南",
+          "daypower": "≤3",
+          "nightpower": "≤3",
+          "daytemp_float": "26.0",
+          "nighttemp_float": "14.0"
+        }
+      ]
+    }
+  ]
+}

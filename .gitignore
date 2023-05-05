@@ -5,4 +5,5 @@
 # 排除vendor文件夹:
 vendor
 .DS_Store
+*.ini
 *.log

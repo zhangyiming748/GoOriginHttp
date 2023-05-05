@@ -1,6 +1,9 @@
 package main
 
 import (
+	"GoOriginHttp/api"
+	"GoOriginHttp/controller"
+	"GoOriginHttp/mysql"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/unrolled/render"
@@ -11,8 +14,6 @@ import (
 	l "log"
 	"net/http"
 	"os"
-	"recommend/api"
-	"recommend/controller"
 
 	"strings"
 	"time"
@@ -56,7 +57,7 @@ func main() {
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 	})
-
+	mysql.SetEngine()
 	n := negroni.New(negroni.NewRecovery())
 	n.Use(c)
 	n.UseHandler(router)
@@ -95,7 +96,10 @@ func makeRouters() *mux.Router {
 
 	router := mux.NewRouter()
 	// http://127.0.0.1:9090/api/v1/getPersion?name=zen
-	router.HandleFunc(url_prefix+"/v1/getPersion", wrapper(controller.GetPersionInfo))
-	router.HandleFunc(url_prefix+"/v1/getWeather", wrapper(controller.GetWeather))
+	router.HandleFunc(url_prefix+"/v1/GetPersion", wrapper(controller.GetPersionInfo))
+
+	router.HandleFunc(url_prefix+"/v1/GetWeathe", wrapper(controller.GetWeather))
+	router.HandleFunc(url_prefix+"/v1/GetCity", wrapper(controller.GetCity))
+	router.HandleFunc(url_prefix+"/v1/DeleteAllLive", wrapper(controller.DeleteAllLive))
 	return router
 }

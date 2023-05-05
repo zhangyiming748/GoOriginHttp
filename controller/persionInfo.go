@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"GoOriginHttp/api"
+	"GoOriginHttp/logic"
 	"encoding/json"
 	"io"
 	"net/http"
-	"recommend/api"
-	"recommend/model"
 )
 
 /*
@@ -23,10 +23,10 @@ func GetPersionInfo(r *http.Request, w http.ResponseWriter) (res api.CustomerRes
 		res.RetData = "done!"
 		return
 	}
-	var p = &model.Persion{
+	var p = &logic.Persion{
 		Name: name,
 	}
-	res = model.FindByName(p)
+	res = logic.FindByName(p)
 	return
 }
 
@@ -44,13 +44,13 @@ func PostPersionInfo(r *http.Request, w http.ResponseWriter) (res api.CustomerRe
 	body, _ := io.ReadAll(r.Body)
 
 	// 解析JSON
-	var req model.Persion
+	var req logic.Persion
 	err := json.Unmarshal(body, &req)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
-	res = model.FindByName(&req)
+	res = logic.FindByName(&req)
 	return
 }

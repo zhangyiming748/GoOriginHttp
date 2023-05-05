@@ -1,0 +1,21 @@
+{
+  "status": "1",
+  "count": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "lives": [
+    {
+      "province": "北京",
+      "city": "石景山区",
+      "adcode": "110107",
+      "weather": "阴",
+      "temperature": "17",
+      "winddirection": "北",
+      "windpower": "≤3",
+      "humidity": "90",
+      "reporttime": "2023-05-05 10:39:20",
+      "temperature_float": "17.0",
+      "humidity_float": "90.0"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-package model
+package logic
 
-var city = map[string]string{
+var City = map[string]string{
 	"中华人民共和国":      "100000",
 	"北京市":          "110000",
 	"北京市市辖区":       "110100",
