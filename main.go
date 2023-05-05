@@ -3,6 +3,7 @@ package main
 import (
 	"GoOriginHttp/api"
 	"GoOriginHttp/controller"
+	"GoOriginHttp/model"
 	"GoOriginHttp/mysql"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -11,7 +12,6 @@ import (
 	"github.com/zhangyiming748/goini"
 	"golang.org/x/exp/slog"
 	"io"
-	l "log"
 	"net/http"
 	"os"
 
@@ -29,8 +29,6 @@ var logLevel = map[string]slog.Level{
 	"Warn":  slog.LevelWarn,
 	"Error": slog.LevelError,
 }
-
-type Level int
 
 func SetLog(level string) {
 	var opt = slog.HandlerOptions{ // 自定义option
@@ -58,6 +56,8 @@ func main() {
 		AllowedOrigins: []string{"*"},
 	})
 	mysql.SetEngine()
+	model.SyncLive()
+	model.SyncForecast()
 	n := negroni.New(negroni.NewRecovery())
 	n.Use(c)
 	n.UseHandler(router)
@@ -69,7 +69,11 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 	slog.Info("服务启动成功", slog.String("端口号", s.Addr))
-	l.Fatal(s.ListenAndServe())
+	if err := s.ListenAndServe(); err != nil {
+		slog.Warn("fall")
+	} else {
+		slog.Info("success")
+	}
 
 }
 

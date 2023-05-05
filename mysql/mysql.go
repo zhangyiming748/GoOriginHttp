@@ -3,9 +3,9 @@ package mysql
 import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/zhangyiming748/goini"
-	"github.com/zhangyiming748/pretty"
 	"golang.org/x/exp/slog"
 	"strings"
+	"time"
 	"xorm.io/xorm"
 	"xorm.io/xorm/names"
 )
@@ -28,12 +28,19 @@ func SetEngine() {
 	}
 	uri := strings.Join([]string{ip, port}, ":")
 	src := strings.Join([]string{user, ":", passwd, "@tcp(", uri, ")/", database, "?charset=utf8"}, "")
-	pretty.P(src)
+	slog.Info("数据库链接", slog.String("参数", src))
 	if MyEngine, err = xorm.NewEngine("mysql", src); err != nil {
-		slog.Error("创建数据库引擎失败", slog.Any("错误信息", err))
+		slog.Error("创建数据库引擎失败")
+		panic(err)
 	}
 	MyEngine.SetMapper(names.GonicMapper{})
-
+	MyEngine.ShowSQL(true)
+	MyEngine.SetTZDatabase(time.Local)
+	//err = MyEngine.Sync2(new(model.Live), new(model.Forecast))
+	//if err != nil {
+	//	slog.Error("同步数据表出错", slog.Any("错误原文", err))
+	//	return
+	//}
 	err = MyEngine.Ping()
 	if err != nil {
 		slog.Error("创建数据库引擎失败", slog.Any("错误信息", err))

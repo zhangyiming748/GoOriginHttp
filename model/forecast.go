@@ -8,8 +8,8 @@ import (
 
 type Forecast struct {
 	Id           int       `xorm:"not null pk autoincr comment('主键id') INT(11)" json:"id"`
-	Province     string    `xorm:"comment('省份名') VARCHAR(255)" json:"province"`
-	City         string    `xorm:"comment('城市名') VARCHAR(255)" json:"city"`
+	Province     string    `xorm:"comment('省份名称') VARCHAR(255)" json:"province"`
+	City         string    `xorm:"comment('城市名称') VARCHAR(255)" json:"city"`
 	Adcode       string    `xorm:"comment('区域编码') VARCHAR(255)" json:"adcode"`
 	Date         string    `xorm:"comment('预报日期') VARCHAR(255)" json:"date"`
 	Week         string    `xorm:"comment('星期') VARCHAR(255)" json:"week"`
@@ -20,11 +20,18 @@ type Forecast struct {
 	DayPower     string    `xorm:"comment('白天风力') VARCHAR(255)" json:"dayPower"`
 	NightPower   string    `xorm:"comment('夜间风力') VARCHAR(255)" json:"nightPower"`
 	ReportTime   time.Time `xorm:"comment('预报发布时间') DateTime" json:"reportTime"`
-	UpdateTime   time.Time `xorm:"updated comment('更新时间) DateTime" json:"update_time"`
+	UpdateTime   time.Time `xorm:"updated comment('更新时间') DateTime" json:"update_time"`
 	CreateTime   time.Time `xorm:"created comment('创建时间') DateTime" json:"create_time"`
-	DeleteTime   time.Time `xorm:"deleted comment('创建时间') DateTime" json:"delete_time"`
+	DeleteTime   time.Time `xorm:"deleted comment('删除时间') DateTime" json:"delete_time"`
 }
 
+func SyncForecast() {
+	err := mysql.GetSession().Sync2(new(Forecast))
+	if err != nil {
+		slog.Error("同步数据表出错", slog.Any("错误原文", err))
+		return
+	}
+}
 func (f Forecast) FindByCityName(city string) []Forecast {
 	var forecasts []Forecast
 	err := mysql.GetSession().Where("name = ?", city).Find(&forecasts)
