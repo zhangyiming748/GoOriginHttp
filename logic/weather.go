@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/zhangyiming748/goini"
 	"golang.org/x/exp/slog"
+	"strconv"
 	"time"
 )
 
@@ -68,16 +69,20 @@ type toAmapWeather struct {
 	Output     string `json:"output"`
 }
 
-func GetWeather(city string, extensions int) (res api.CustomerResponse) {
+func GetWeather(city, extensions string) (res api.CustomerResponse) {
+	ext, err := strconv.Atoi(extensions)
+	if err != nil {
+		return api.CustomerResponse{}
+	}
 	conf := goini.SetConfig(configPath)
 	key, err := conf.GetValue("weather", "key")
 	if err != nil {
 		slog.Warn("lost key")
 	}
 	var kind string
-	if extensions == 1 {
+	if ext == 1 {
 		kind = "base"
-	} else if extensions == 0 {
+	} else if ext == 0 {
 		kind = "all"
 	} else {
 		slog.Warn("参数错误")
@@ -126,11 +131,32 @@ func getFromAmap(tam *toAmapWeather) []byte {
 		}
 		livedb.InsertOne()
 	} else if tam.Extensions == "all" {
-		var f forecast
-		err := json.Unmarshal(body, &f)
+		var fs []model.Forecast
+		var all forecast
+		err := json.Unmarshal(body, &all)
 		if err != nil {
 			slog.Warn("解析失败")
 		}
+		reportTime, _ := time.ParseInLocation("2006-01-02 15:04:05", all.Forecasts[0].Reporttime, time.Local)
+		for _, day := range all.Forecasts[0].Casts {
+			var f = &model.Forecast{
+				Id:           0,
+				Province:     all.Forecasts[0].Province,
+				City:         all.Forecasts[0].City,
+				Adcode:       all.Forecasts[0].Adcode,
+				Date:         day.Date,
+				Week:         day.Week,
+				DayWeather:   day.Dayweather,
+				NightWeather: day.Nightweather,
+				DayWind:      day.Daywind,
+				NightWind:    day.Nightwind,
+				DayPower:     day.Daypower,
+				NightPower:   day.Nightpower,
+				ReportTime:   reportTime,
+			}
+			fs = append(fs, *f)
+		}
+		model.InsertForecasts(fs)
 	}
 	return body
 }

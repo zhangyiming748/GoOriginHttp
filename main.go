@@ -50,17 +50,13 @@ func main() {
 	conf := goini.SetConfig("./conf.ini")
 	ch := make(chan os.Signal)
 	// 监听信号
-	signal.Notify(ch, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
+	signal.Notify(ch, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	go func() {
 		for s := range ch {
 			switch s { // 终端控制进程结束(终端连接断开)|用户发送INTR字符(Ctrl+C)触发|结束程序
 			case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM:
-				slog.Debug("退出:", slog.Any("信号量", s))
+				slog.Debug("退出服务", slog.Any("信号量", s))
 				os.Exit(0)
-			case syscall.SIGUSR1:
-				slog.Debug("usr1", slog.Any("信号量", s))
-			case syscall.SIGUSR2:
-				slog.Debug("usr2", slog.Any("信号量", s))
 			default:
 				slog.Debug("其他信号:", slog.Any("信号量", s))
 			}
@@ -122,8 +118,9 @@ func makeRouters() *mux.Router {
 	// http://127.0.0.1:9090/api/v1/getPersion?name=zen
 	router.HandleFunc(url_prefix+"/v1/GetPersion", wrapper(controller.GetPersionInfo))
 
-	router.HandleFunc(url_prefix+"/v1/GetWeathe", wrapper(controller.GetWeather))
+	router.HandleFunc(url_prefix+"/v1/GetWeather", wrapper(controller.GetWeather))
 	router.HandleFunc(url_prefix+"/v1/GetCity", wrapper(controller.GetCity))
 	router.HandleFunc(url_prefix+"/v1/DeleteAllLive", wrapper(controller.DeleteAllLive))
+
 	return router
 }

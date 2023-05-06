@@ -14,12 +14,13 @@ curl --location --request GET 'http://127.0.0.1:9090/api/v1/GetWeathe?City=<City
 func GetWeather(r *http.Request, w http.ResponseWriter) (res api.CustomerResponse) {
 	query := r.URL.Query()
 	city := query.Get("City") //城市的中文名
+	extensions := query.Get("extensions")
 	// 获取URL路径参数
 	///user/10?name=john&age=30
 	//like user/:id
 	//vars := mux.Vars(r)
 	//id := vars["id"]
-	res = logic.GetWeather(city, 1)
+	res = logic.GetWeather(city, extensions)
 	return
 }
 
