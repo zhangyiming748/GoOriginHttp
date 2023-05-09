@@ -13,7 +13,7 @@ curl --location --request GET 'http://127.0.0.1:9090/api/v1/GetWeathe?City=<City
 */
 func GetWeather(r *http.Request, w http.ResponseWriter) (res api.CustomerResponse) {
 	query := r.URL.Query()
-	city := query.Get("City") //城市的中文名
+	city := query.Get("city") //城市的中文名
 	extensions := query.Get("extensions")
 	// 获取URL路径参数
 	///user/10?name=john&age=30

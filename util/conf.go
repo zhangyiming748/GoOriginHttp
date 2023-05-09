@@ -9,7 +9,7 @@ const confPath = "./conf.ini"
 
 var (
 	RunMode string
-	conf    *goini.Config
+	Conf    *goini.Config
 )
 
 /*
@@ -26,7 +26,7 @@ func init() {
 }
 
 func initConfig() {
-	conf = goini.SetConfig(confPath)
+	Conf = goini.SetConfig(confPath)
 	slog.Info(confPath)
 }
 
@@ -47,6 +47,6 @@ func GetVal(section, name string) string {
 	if section == "" {
 		section = GetEnv()
 	}
-	val, _ := conf.GetValue(section, name)
+	val, _ := Conf.GetValue(section, name)
 	return val
 }

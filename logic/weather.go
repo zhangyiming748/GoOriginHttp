@@ -13,7 +13,7 @@ import (
 
 const (
 	configPath = "./conf.ini"
-	URL        = "https://restapi.amap.com/v3/weather/weatherInfo?parameters"
+	AMAPURL    = "https://restapi.amap.com/v3/weather/weatherInfo?parameters"
 )
 
 type live struct {
@@ -106,7 +106,7 @@ func getFromAmap(tam *toAmapWeather) []byte {
 		"extensions": tam.Extensions,
 		"output":     tam.Output,
 	}
-	body := util.HttpGetValue(nil, m, URL)
+	body := util.HttpGetValue(nil, m, AMAPURL)
 	if tam.Extensions == "base" {
 		var l live
 		err := json.Unmarshal(body, &l)
@@ -157,6 +157,7 @@ func getFromAmap(tam *toAmapWeather) []byte {
 			fs = append(fs, *f)
 		}
 		model.InsertForecasts(fs)
+		slog.Info("完成一次完整的查询天气请求")
 	}
 	return body
 }
