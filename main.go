@@ -5,11 +5,11 @@ import (
 	"GoOriginHttp/controller"
 	"GoOriginHttp/model"
 	"GoOriginHttp/mysql"
+	"GoOriginHttp/util"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/unrolled/render"
 	"github.com/urfave/negroni"
-	"github.com/zhangyiming748/goini"
 	"golang.org/x/exp/slog"
 	"io"
 	"net/http"
@@ -47,7 +47,7 @@ func SetLog(level string) {
 }
 
 func main() {
-	conf := goini.SetConfig("./conf.ini")
+
 	ch := make(chan os.Signal)
 	// 监听信号
 	signal.Notify(ch, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
@@ -62,11 +62,8 @@ func main() {
 			}
 		}
 	}()
-	if level, err := conf.GetValue("log", "level"); err != nil {
-		SetLog("Debug")
-	} else {
-		SetLog(level)
-	}
+	SetLog(util.GetVal("log", "level"))
+
 	router := makeRouters()
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
