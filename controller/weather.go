@@ -45,3 +45,9 @@ func GetCity(r *http.Request, w http.ResponseWriter) (res api.CustomerResponse) 
 	res.RetData = logic.City
 	return
 }
+
+func GetAllLive(r *http.Request, w http.ResponseWriter) (res api.CustomerResponse) {
+
+	res = logic.GetAllLive()
+	return
+}

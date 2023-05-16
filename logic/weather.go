@@ -172,3 +172,16 @@ func DeleteAllLive() (res api.CustomerResponse) {
 	res.RetData = all
 	return
 }
+func GetAllLive() (res api.CustomerResponse) {
+	var one model.Live
+	if all, err := one.GetAllByXORM(); err != nil {
+		res.ResCode = "500"
+		res.ResStatus = "查询出错"
+		res.RetData = err
+	} else {
+		res.ResCode = "200"
+		res.ResStatus = "查询成功"
+		res.RetData = all
+	}
+	return res
+}

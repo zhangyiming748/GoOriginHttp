@@ -6,6 +6,7 @@ import (
 	"GoOriginHttp/model"
 	"GoOriginHttp/mysql"
 	"GoOriginHttp/util"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/unrolled/render"
@@ -47,7 +48,7 @@ func SetLog(level string) {
 }
 
 func main() {
-
+	startAt := time.Now()
 	ch := make(chan os.Signal)
 	// 监听信号
 	signal.Notify(ch, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
@@ -55,7 +56,10 @@ func main() {
 		for s := range ch {
 			switch s { // 终端控制进程结束(终端连接断开)|用户发送INTR字符(Ctrl+C)触发|结束程序
 			case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM:
-				slog.Debug("退出服务", slog.Any("信号量", s))
+				//slog.Debug("退出服务", slog.Any("信号量", s))
+				end := time.Now().Sub(startAt).Minutes()
+				endAt := fmt.Sprintf("正常运行%.2f分后停止服务", end)
+				slog.Info(endAt)
 				os.Exit(0)
 			default:
 				slog.Debug("其他信号:", slog.Any("信号量", s))
@@ -118,6 +122,7 @@ func makeRouters() *mux.Router {
 	router.HandleFunc(url_prefix+"/v1/GetWeather", wrapper(controller.GetWeather))
 	router.HandleFunc(url_prefix+"/v1/GetCity", wrapper(controller.GetCity))
 	router.HandleFunc(url_prefix+"/v1/DeleteAllLive", wrapper(controller.DeleteAllLive))
+	router.HandleFunc(url_prefix+"/v1/GetAllLive", wrapper(controller.GetAllLive))
 
 	return router
 }
