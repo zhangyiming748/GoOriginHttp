@@ -1,0 +1,3 @@
+"C:/Users/zen/Github/GoOriginHttp/util/http.go:62","msg": "http get done", "返回体": "{\n    \"code\": 200,\n    \"cover\": \"https://y.qq.com
+/music/photo_new/T002R300x300M000002Neh8l0uciQZ_1.jpg\",\n    \"name\": \"花海\",\n    \"singer\": \"周杰伦\",\n    \"quality\": \"SQ无损\",\n    \"url\": \"http://aqqmusic.tc.qq.com/amobile.music.tc.qq.com/
+F000001WYACn4XVhRT.flac?guid=B69D8BC956E47C2B65440380380B7E9A&vkey=B6BE2DB2411A1A62463BFEE77B6E9002A59F9C4C2F14D4B14C8BF4BC1737C9991E8E3AF7D24EDA8518E877B5A4695C068501C1CB03135DD6&uin=1828222534&fromtag=119117\",\n    \"tips\": \"慕名API：http://xiaoapi.cn\"\n}

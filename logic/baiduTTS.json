@@ -1,0 +1,8 @@
+{
+  "code": 200,
+  "data": {
+    "msg": "你好，我是雷军",
+    "mp3": "http://xiaoapi.cn/API/log/38909420.mp3"
+  },
+  "tips": "慕名API：http://xiaoapi.cn"
+}

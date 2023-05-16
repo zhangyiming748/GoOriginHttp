@@ -75,6 +75,7 @@ func main() {
 	mysql.SetEngine()
 	model.SyncLive()
 	model.SyncForecast()
+	model.SyncMusic()
 	n := negroni.New(negroni.NewRecovery())
 	n.Use(c)
 	n.UseHandler(router)
@@ -123,6 +124,6 @@ func makeRouters() *mux.Router {
 	router.HandleFunc(url_prefix+"/v1/GetCity", wrapper(controller.GetCity))
 	router.HandleFunc(url_prefix+"/v1/DeleteAllLive", wrapper(controller.DeleteAllLive))
 	router.HandleFunc(url_prefix+"/v1/GetAllLive", wrapper(controller.GetAllLive))
-
+	router.HandleFunc(url_prefix+"/v1/GetTopMusic", wrapper(controller.GetTopMusic))
 	return router
 }
